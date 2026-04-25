@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buổi 06 — Server + Form đăng ký</title>
+  <style>
+    /* ========== RESET & BASE ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6fa;
+      color: #2d3436;
+      line-height: 1.6;
+    }
+
+    /* ========== CONTAINER ========== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+
+
+    /* ========== DEMO CARD ========== */
+    .demo-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .demo-header {
+      background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
+      color: #fff;
+      padding: 14px 28px;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-header .dot {
+      width: 10px;
+      height: 10px;
+      background: #00b894;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .demo-body {
+      padding: 28px 28px 20px;
+    }
+
+    /* ========== FORMS GRID ========== */
+    .forms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .forms-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-section h4 {
+      color: #00b894;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      font-size: 15px;
+      color: #333;
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #00b894;
+    }
+
+    .form-group input::placeholder {
+      color: #bbb;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 6px;
+      background: #00b894;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #00a383;
+    }
+
+    .result-box {
+      margin-top: 14px;
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 14px 16px;
+      min-height: 50px;
+      font-size: 14px;
+      color: #999;
+    }
+
+    .result-box pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      color: #2d3436;
+    }
+
+    .result-box .error {
+      color: #d63031;
+    }
+
+    .result-box .success {
+      color: #00b894;
+    }
+
+    /* ========== CONSOLE LOG ========== */
+    .console-section {
+      margin-top: 28px;
+    }
+
+    .console-section h4 {
+      font-size: 14px;
+      color: #999;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .console-box {
+      background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
+      color: #a4e8d2;
+      border-radius: 8px;
+      padding: 16px 20px;
+      min-height: 50px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .console-box .placeholder-text {
+      color: #636e72;
+      font-style: italic;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+
+
+    <!-- ========== DEMO LIVE ========== -->
+    <div class="demo-card">
+      <div class="demo-header">
+        <span class="dot"></span>
+        DEMO LIVE — Giả lập API chạy trong trình duyệt
+      </div>
+
+      <div class="demo-body">
+        <div class="forms-grid">
+
+          <!-- FORM 1 — GET /api/info -->
+          <div class="form-section">
+            <h4>FORM 1 — GET /api/info</h4>
+            <form id="formInfo">
+              <div class="form-group">
+                <label for="info-name">Tên</label>
+                <input type="text" id="info-name" name="name" placeholder="Nhập tên..." />
+              </div>
+              <div class="form-group">
+                <label for="info-age">Tuổi</label>
+                <input type="number" id="info-age" name="age" placeholder="Nhập tuổi..." />
+              </div>
+              <button type="submit" class="btn-submit">Gửi GET /api/info</button>
+            </form>
+            <div class="result-box" id="resultInfo">Kết quả hiện ở đây...</div>
+          </div>
+
+          <!-- FORM 2 — POST /api/register -->
+          <div class="form-section">
+            <h4>FORM 2 — POST /api/register</h4>
+            <form id="formRegister">
+              <div class="form-group">
+                <label for="reg-name">Tên</label>
+                <input type="text" id="reg-name" name="name" placeholder="Nhập tên..." />
+              </div>
+              <div class="form-group">
+                <label for="reg-age">Tuổi</label>
+                <input type="number" id="reg-age" name="age" placeholder="Nhập tuổi..." />
+              </div>
+              <div class="form-group">
+                <label for="reg-email">Email</label>
+                <input type="email" id="reg-email" name="email" placeholder="Nhập email..." />
+              </div>
+              <button type="submit" class="btn-submit">Gửi POST /api/register</button>
+            </form>
+            <div class="result-box" id="resultRegister">Kết quả hiện ở đây...</div>
+          </div>
+
+        </div>
+
+        <!-- CONSOLE LOG -->
+        <div class="console-section">
+          <h4>CONSOLE LOG — Middleware logger</h4>
+          <div class="console-box" id="consoleLog">
+            <span class="placeholder-text">// Log sẽ hiện ở đây khi bạn gửi request...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!-- ========== JAVASCRIPT ========== -->
+  <script>
+    // --- Helper: Thêm log vào Console Log ---
+    function addLog(method, path) {
+      const consoleBox = document.getElementById('consoleLog');
+      const now = new Date().toLocaleTimeString('vi-VN');
+      const logLine = document.createElement('div');
+      logLine.textContent = `[${now}] ${method} ${path}`;
+
+      // Xóa placeholder nếu còn
+      const placeholder = consoleBox.querySelector('.placeholder-text');
+      if (placeholder) placeholder.remove();
+
+      consoleBox.appendChild(logLine);
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    // =============================================
+    // FORM 1 — GET /api/info
+    // =============================================
+    document.getElementById('formInfo').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById('info-name').value;
+      const age = document.getElementById('info-age').value;
+      const resultBox = document.getElementById('resultInfo');
+
+      // Ghi log
+      addLog('GET', `/api/info?name=${name}&age=${age}`);
+
+      fetch(`/api/info?name=${encodeURIComponent(name)}&age=${encodeURIComponent(age)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            resultBox.innerHTML = `<pre class="error">❌ Lỗi: ${data.error}</pre>`;
+          } else {
+            resultBox.innerHTML = `<pre class="success">✅ ${JSON.stringify(data, null, 2)}</pre>`;
+          }
+        })
+        .catch(err => {
+          resultBox.innerHTML = `<pre class="error">❌ Lỗi kết nối: ${err.message}</pre>`;
+        });
+    });
+
+    // =============================================
+    // FORM 2 — POST /api/register
+    // =============================================
+    document.getElementById('formRegister').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById('reg-name').value;
+      const age = document.getElementById('reg-age').value;
+      const email = document.getElementById('reg-email').value;
+      const resultBox = document.getElementById('resultRegister');
+
+      // Ghi log
+      addLog('POST', '/api/register');
+
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, age, email })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            resultBox.innerHTML = `<pre class="error">❌ Lỗi: ${data.error}</pre>`;
+          } else {
+            resultBox.innerHTML = `<pre class="success">✅ ${JSON.stringify(data, null, 2)}</pre>`;
+          }
+        })
+        .catch(err => {
+          resultBox.innerHTML = `<pre class="error">❌ Lỗi kết nối: ${err.message}</pre>`;
+        });
+    });
+  </script>
+
+</body>
+</html>
